@@ -32,6 +32,8 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1023292486" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="TESTS"/>
+									<listOptionValue builtIn="false" value="GDT_WITH_DOCTEST"/>
+									<listOptionValue builtIn="false" value="PIPE_WITH_DOCTEST"/>
 									<listOptionValue builtIn="false" value="EVENT_WITH_DOCTEST"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1869501205" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
