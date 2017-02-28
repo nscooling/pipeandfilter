@@ -22,6 +22,11 @@ Generator::~Generator()
   // TODO Auto-generated destructor stub
 }
 
+std::string Generator::execute()
+{
+  return execute(rand() % 20);
+}
+
 std::string Generator::execute(unsigned numOfMsgs)
 {
   string str{};

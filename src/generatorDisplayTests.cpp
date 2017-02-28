@@ -25,20 +25,9 @@ protected:
   Display d;
 };
 
-TEST_CASE_FIXTURE(GDTests, "zero count test") {
-  string s1 = g.execute(0U);
-  string s2 = d.execute();
-  CHECK(s1 == s2);
-}
 
 TEST_CASE_FIXTURE(GDTests, "count test") {
   string s1 = g.execute();
-  string s2 = d.execute();
-  CHECK(s1 == s2);
-}
-
-TEST_CASE_FIXTURE(GDTests, "count test") {
-  string s1 = g.execute(10U);
   string s2 = d.execute();
   CHECK(s1 == s2);
 }
