@@ -12,6 +12,8 @@
 
 static const std::array<const char*,4> msg{"ADVISORY", "CAUTION", "WARNING","NA"};
 
+
+
 Event::Event(Alarm_t the_alarm): theAlarm{the_alarm}
 {
   std::cout << "Event::Event(Alarm_t the_alarm)\n";
@@ -31,7 +33,7 @@ Event& Event::operator=(const Event& rhs)
 
 Event::~Event()
 {
- std::cout << "Event::~Event()\n";
+  std::cout << "Event::~Event()\n";
 }
 
 Event::Alarm_t Event::type() const
@@ -55,7 +57,7 @@ Event::operator const char*() const
 
 class EventTests {
 protected:
-  Event e{};
+  Event e{Event::Alarm_t::NA};
   Event a{Event::Alarm_t::ADVISORY};
   Event c{Event::Alarm_t::CAUTION};
   Event w{Event::Alarm_t::WARNING};

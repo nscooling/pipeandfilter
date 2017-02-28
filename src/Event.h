@@ -9,12 +9,12 @@
 #ifndef SRC_EVENT_H_
 #define SRC_EVENT_H_
 #include <vector>
+#include <iostream>
 
 class Event
 {
 public:
   enum class Alarm_t { ADVISORY, CAUTION, WARNING, NA };
-
   Event() = default;
   Event(Alarm_t the_alarm);
   Event(const Event&);

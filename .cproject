@@ -31,7 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/doctest/doctest}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1023292486" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="PIPELINE_WITH_DOCTEST"/>
+									<listOptionValue builtIn="false" value="EVENT_WITH_DOCTEST"/>
 									<listOptionValue builtIn="false" value="TESTS"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1869501205" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
