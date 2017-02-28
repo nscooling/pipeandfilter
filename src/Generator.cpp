@@ -11,6 +11,7 @@
 #include "Event.h"
 #include <cstdlib>
 #include <array>
+using namespace std;
 
 Generator::Generator(Pipe& p):thePipe(&p)
 {
@@ -22,15 +23,22 @@ Generator::~Generator()
 }
 
 
-std::string Generator::execute() {
-  std::array<Event, 4> evts {
+std::string Generator::execute()
+{
+  string str{};
+
+  EventList evts {
     Event{},
     Event{Event::Alarm_t::ADVISORY},
     Event{Event::Alarm_t::CAUTION},
     Event{Event::Alarm_t::WARNING}
   };
 
-  int choice = std::rand() % 4;
-  auto err = thePipe->push(evts[choice]);
-  return evts[choice].typeAsString();
+  auto err = thePipe->push(evts);
+  if(err == Pipe::err_t::OK) {
+    for(auto i : evts) {
+       str += i.typeAsString();
+    }
+  }
+  return str;
 }

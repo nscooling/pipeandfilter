@@ -14,12 +14,24 @@ static const std::array<const char*,4> msg{"ADVISORY", "CAUTION", "WARNING","NA"
 
 Event::Event(Alarm_t the_alarm): theAlarm{the_alarm}
 {
-//  st << "alarm ctor\n";
+  std::cout << "Event::Event(Alarm_t the_alarm)\n";
+}
+
+Event::Event(const Event& cp): theAlarm{cp.theAlarm}
+{
+  std::cout << "Event::Event(const Event& cp)\n";
+}
+
+Event& Event::operator=(const Event& rhs)
+{
+  std::cout << "Event::opertor=(const Event& rhs)\n";
+  theAlarm = rhs.theAlarm;
+  return *this;
 }
 
 Event::~Event()
 {
-// std::cout << "alarm dtor\n";
+ std::cout << "Event::~Event()\n";
 }
 
 Event::Alarm_t Event::type() const

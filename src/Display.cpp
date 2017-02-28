@@ -21,10 +21,15 @@ Display::~Display()
 }
 
 std::string Display::execute() {
-  Event e{};
-  auto err = thePipe->pull(e);
+  EventList evts{};
+  std::string str{};
+
+  auto err = thePipe->pull(evts);
   if (err == Pipe::err_t::OK) {
-    std::cout << "Event received => " << e << std::endl;
+    for(auto i : evts) {
+       str += i.typeAsString();
+       std::cout << "Event received => " << i << std::endl;
+    }
   }
-  return e.typeAsString();
+  return str;
 }

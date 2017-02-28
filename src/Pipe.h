@@ -11,7 +11,8 @@
 
 #include "Event.h"
 
-using pipe_elem = Event;
+//using pipe_elem = Event;
+using pipe_elem = EventList;
 
 class Pipe
 {

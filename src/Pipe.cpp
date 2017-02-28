@@ -51,7 +51,12 @@ Pipe::err_t Pipe::push(const pipe_elem& e)
 class PipeTests {
 protected:
   Pipe p{};
-  Event e{};
+  EventList e{
+    Event{},
+    Event{Event::Alarm_t::ADVISORY},
+    Event{Event::Alarm_t::CAUTION},
+    Event{Event::Alarm_t::WARNING}
+  };
 };
 
 TEST_CASE_FIXTURE(PipeTests, "empty pull") {
@@ -67,19 +72,11 @@ TEST_CASE_FIXTURE(PipeTests, "full push") {
   CHECK(Pipe::err_t::Full == p.push(e));
 }
 
-TEST_CASE_FIXTURE(PipeTests, "empty push then pull default event") {
-  Event local{};
+TEST_CASE_FIXTURE(PipeTests, "push then pull") {
+  EventList local{};
   p.push(e);
   p.pull(local);
-  CHECK(e.type() == local.type());
+  CHECK(e == local);
 }
-
-TEST_CASE_FIXTURE(PipeTests, "empty push then pull non-default event") {
-  Event a{Event::Alarm_t::ADVISORY};
-  p.push(a);
-  p.pull(e);
-  CHECK(e.type() == a.type());
-}
-
 
 #endif
