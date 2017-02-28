@@ -11,16 +11,24 @@
 #include "doctest.h"
 #include "Pipe.h"
 #include "Generator.h"
+#include "Display.h"
+
+#include <string>
+#include <iostream>
+using namespace std;
 
 class GDTests {
 protected:
-  GDTests():g(p){}
+  GDTests():g{p}, d{p}{}
   Pipe p{};
   Generator g;
+  Display d;
 };
 
 TEST_CASE_FIXTURE(GDTests, "initial test") {
-  CHECK(Event::Alarm_t::NA == g.execute());
+  string s1 = g.execute();
+  string s2 = d.execute();
+  CHECK(s1 == s2);
 }
 
 

@@ -9,6 +9,8 @@
 #include "Generator.h"
 #include "Pipe.h"
 #include "Event.h"
+#include <cstdlib>
+#include <array>
 
 Generator::Generator(Pipe& p):thePipe(&p)
 {
@@ -20,8 +22,15 @@ Generator::~Generator()
 }
 
 
-Event::Alarm_t Generator::execute() {
-  Event e{};
-  auto err = thePipe->push(e);
-  return e.type();
+std::string Generator::execute() {
+  std::array<Event, 4> evts {
+    Event{},
+    Event{Event::Alarm_t::ADVISORY},
+    Event{Event::Alarm_t::CAUTION},
+    Event{Event::Alarm_t::WARNING}
+  };
+
+  int choice = std::rand() % 4;
+  auto err = thePipe->push(evts[choice]);
+  return evts[choice].typeAsString();
 }

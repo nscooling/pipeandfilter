@@ -3,25 +3,25 @@
 // Transitioning to C++11 / C++14
 // AC++11-401
 //
-// Generator.h
+// Display.h
 //
 // ------------------------------------------------------------
-#ifndef GENERATOR_H_
-#define GENERATOR_H_
+#ifndef SRC_DISPLAY_H_
+#define SRC_DISPLAY_H_
 
 class Pipe;
 
 // TODO do forward reference here
 #include <string>
 
-class Generator
+class Display
 {
 public:
-  Generator(Pipe&);
-  virtual ~Generator();
+  Display(Pipe&);
+  virtual ~Display();
   std::string execute();
 private:
   Pipe* thePipe;
 };
 
-#endif /* GENERATOR_H_ */
+#endif /* SRC_DISPLAY_H_ */
