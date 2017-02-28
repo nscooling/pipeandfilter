@@ -17,16 +17,22 @@ public:
   enum class Alarm_t { ADVISORY, CAUTION, WARNING, NA };
   Event() = default;
   Event(Alarm_t the_alarm);
+  Event(Alarm_t the_alarm,  const char*);
   Event(const Event&);
-  Event& operator=(const Event&);
+  Event& operator=(Event);
   ~Event();
 
   Alarm_t type() const;
   const char* typeAsString() const;
-  operator const char*() const;
+  const char* what() const;
 private:
   Alarm_t theAlarm { Alarm_t::NA };
+  char* str{ nullptr };
+
+  friend void swap(Event& lhs, Event& rhs);
 };
+
+void swap(Event& lhs, Event& rhs);
 
 using EventList = std::vector<Event>;
 
