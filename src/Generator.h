@@ -19,7 +19,7 @@ class Generator
 public:
   Generator(Pipe&);
   virtual ~Generator();
-  std::string execute();
+  std::string execute(unsigned = 1U);
 private:
   Pipe* thePipe;
 };

@@ -22,16 +22,15 @@ Generator::~Generator()
   // TODO Auto-generated destructor stub
 }
 
-
-std::string Generator::execute()
+std::string Generator::execute(unsigned numOfMsgs)
 {
   string str{};
+  EventList evts {};
+  evts.reserve(numOfMsgs);
 
-  EventList evts {
-    Event{},
-    Event{Event::Alarm_t::ADVISORY},
-    Event{Event::Alarm_t::CAUTION},
-    Event{Event::Alarm_t::WARNING}
+  for( ; numOfMsgs > 0 ; --numOfMsgs) {
+    unsigned val = rand() % 3;
+    evts.emplace_back(static_cast<Event::Alarm_t>(val));
   };
 
   auto err = thePipe->push(evts);
