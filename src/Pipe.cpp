@@ -47,15 +47,16 @@ Pipe::err_t Pipe::push(pipe_elem& e)
 
 #ifdef PIPE_WITH_DOCTEST
 #include "doctest.h"
+#include <algorithm>
 
 class PipeTests {
 protected:
   Pipe p{};
   EventList e{
-    Event{},
-    Event{Event::Alarm_t::ADVISORY},
-    Event{Event::Alarm_t::CAUTION},
-    Event{Event::Alarm_t::WARNING}
+    Event{Event::Alarm_t::NA, ""},
+    Event{Event::Alarm_t::ADVISORY, "watch out"},
+    Event{Event::Alarm_t::CAUTION, "careful now"},
+    Event{Event::Alarm_t::WARNING, "oh bugger"}
   };
 };
 
@@ -76,7 +77,8 @@ TEST_CASE_FIXTURE(PipeTests, "push then pull") {
   EventList local{};
   p.push(e);
   p.pull(local);
-  CHECK(e == local);
+  CHECK(e[0] == local[0]);
+//  CHECK(true = std::equal(begin(e), end(e), begin(local)));
 }
 
 #endif
