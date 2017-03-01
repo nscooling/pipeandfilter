@@ -21,9 +21,9 @@ Pipe::~Pipe()
 
 Pipe::err_t Pipe::pull(pipe_elem& e)
 {
-  if(state != err_t::Empty) {
-    e = std::move(elem);
-    state = err_t::Empty;
+  if(!elem.isEmpty()) {
+    elem.get(e);
+    if(elem.isEmpty())state = err_t::Empty;
     return err_t::OK;
   }
   else {
@@ -31,30 +31,31 @@ Pipe::err_t Pipe::pull(pipe_elem& e)
   }
 }
 
-
-Pipe::err_t Pipe::push(pipe_elem& e)
-{
-  if(state != err_t::Full) {
-    elem = std::move(e);
-    state = err_t::Full;
-    return err_t::OK;
-  }
-  else {
-    return state;
-  }
-}
-
-//Pipe::err_t Pipe::push(pipe_elem&& e)
+//
+//Pipe::err_t Pipe::push(const pipe_elem& e)
 //{
-//  if(state != err_t::Full) {
-//    elem = std::move(e);
-//    state = err_t::Full;
+//  if(!elem.isFull()) {
+////    elem = std::move(e);
+//    elem.add(e);
+//    if(elem.isFull())state = err_t::Full;
 //    return err_t::OK;
 //  }
 //  else {
 //    return state;
 //  }
 //}
+
+Pipe::err_t Pipe::push(pipe_elem&& e)
+{
+  if(!elem.isFull()) {
+    elem.add(std::move(e));
+    if(elem.isFull())state = err_t::Full;
+    return err_t::OK;
+  }
+  else {
+    return state;
+  }
+}
 
 
 #ifdef PIPE_WITH_DOCTEST
@@ -86,13 +87,21 @@ TEST_CASE_FIXTURE(PipeTests, "empty pull") {
   CHECK(Pipe::err_t::Empty == p.pull(e));
 }
 
-TEST_CASE_FIXTURE(PipeTests, "empty push") {
-  CHECK(Pipe::err_t::OK == p.push(e));
+TEST_CASE_FIXTURE(PipeTests, "empty push lvalue") {
+  CHECK(Pipe::err_t::OK == p.push(std::move(e)));
 }
 
 TEST_CASE_FIXTURE(PipeTests, "full push") {
-  p.push(e);
-  CHECK(Pipe::err_t::Full == p.push(e));
+  auto events = {
+      Event{Event::Alarm_t::NA, ""},
+      Event{Event::Alarm_t::ADVISORY, "watch out"},
+      Event{Event::Alarm_t::CAUTION, "careful now"},
+      Event{Event::Alarm_t::WARNING, "oh bugger"}
+  };
+  p.push(std::make_unique<EventList>(events));
+  p.push(std::make_unique<EventList>(events));
+
+  CHECK(Pipe::err_t::Full == p.push(std::make_unique<EventList>(events)));
 }
 
 TEST_CASE_FIXTURE(PipeTests, "push then pull") {
@@ -101,7 +110,7 @@ TEST_CASE_FIXTURE(PipeTests, "push then pull") {
   auto local = std::make_unique<EventList>();
   CHECK(local->size() == 0);
 
-  p.push(e);
+  p.push(std::move(e));
   CHECK(e == nullptr);
 
   p.pull(local);

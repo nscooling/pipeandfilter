@@ -36,6 +36,7 @@ public:
   Error add(Elem_Ty&& value);
   Error get(Elem_Ty& value);
   bool isEmpty() const;
+  bool isFull() const { return !isEmpty(); }
   size_t size() { return numItems; }
 
 private:
@@ -84,7 +85,7 @@ typename Buffer<T, sz>::Error Buffer<T, sz>::get(Buffer<T, sz>::Elem_Ty &value) 
   if (numItems == 0)
     return EMPTY;
 
-  value = buffer[read];
+  value = std::move(buffer[read]);
   --numItems;
   ++read;
   if (read == sz)

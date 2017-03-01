@@ -11,22 +11,22 @@
 
 #include "Event.h"
 #include <memory>
-
-//using pipe_elem = Event;
+#include "Buffer.h"
 using pipe_elem = std::unique_ptr<EventList>;
 
 class Pipe
 {
 public:
+
   enum class err_t { OK, Empty, Full };
   Pipe();
   virtual ~Pipe();
   err_t pull(pipe_elem&);
-  err_t push(pipe_elem&);
-//  err_t push(pipe_elem&&);
+//  err_t push(const pipe_elem&);
+  err_t push(pipe_elem&&);
 private:
   err_t state { err_t::Empty};
-  pipe_elem elem{};
+  Buffer<pipe_elem,2> elem{};
 };
 
 #endif /* SRC_PIPE_H_ */
