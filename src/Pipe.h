@@ -10,9 +10,10 @@
 #define SRC_PIPE_H_
 
 #include "Event.h"
+#include <memory>
 
 //using pipe_elem = Event;
-using pipe_elem = EventList;
+using pipe_elem = std::unique_ptr<EventList>;
 
 class Pipe
 {
@@ -21,8 +22,8 @@ public:
   Pipe();
   virtual ~Pipe();
   err_t pull(pipe_elem&);
-  err_t push(const pipe_elem&);
-  err_t push(pipe_elem&&);
+  err_t push(pipe_elem&);
+//  err_t push(pipe_elem&&);
 private:
   err_t state { err_t::Empty};
   pipe_elem elem{};

@@ -21,12 +21,12 @@ Display::~Display()
 }
 
 std::string Display::execute() {
-  EventList evts{};
+  auto evts = std::make_unique<EventList>();
   std::string str{};
 
   auto err = thePipe->pull(evts);
   if (err == Pipe::err_t::OK) {
-    for(auto i : evts) {
+    for(auto i : *evts) {
        str += i.typeAsString();
        std::cout << "Event received => " << i.typeAsString();
        std::cout << " : " << i.what() << std::endl;

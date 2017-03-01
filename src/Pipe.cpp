@@ -32,19 +32,7 @@ Pipe::err_t Pipe::pull(pipe_elem& e)
 }
 
 
-Pipe::err_t Pipe::push(const pipe_elem& e)
-{
-  if(state != err_t::Full) {
-    elem = e;
-    state = err_t::Full;
-    return err_t::OK;
-  }
-  else {
-    return state;
-  }
-}
-
-Pipe::err_t Pipe::push(pipe_elem&& e)
+Pipe::err_t Pipe::push(pipe_elem& e)
 {
   if(state != err_t::Full) {
     elem = std::move(e);
@@ -56,10 +44,23 @@ Pipe::err_t Pipe::push(pipe_elem&& e)
   }
 }
 
+//Pipe::err_t Pipe::push(pipe_elem&& e)
+//{
+//  if(state != err_t::Full) {
+//    elem = std::move(e);
+//    state = err_t::Full;
+//    return err_t::OK;
+//  }
+//  else {
+//    return state;
+//  }
+//}
+
 
 #ifdef PIPE_WITH_DOCTEST
 #include "doctest.h"
 #include <algorithm>
+#include <memory>
 
 class PipeTests {
 protected:
@@ -70,13 +71,14 @@ protected:
 //    Event{Event::Alarm_t::CAUTION, "careful now"},
 //    Event{Event::Alarm_t::WARNING, "oh bugger"}
 //  };
-  EventList e{};
+  pipe_elem e{};
   PipeTests() {
-    e.reserve(4);
-    e.emplace_back(Event::Alarm_t::NA, "");
-    e.emplace_back(Event::Alarm_t::ADVISORY, "watch out");
-    e.emplace_back(Event::Alarm_t::CAUTION, "careful now");
-    e.emplace_back(Event::Alarm_t::WARNING, "oh bugger");
+    e = std::make_unique<EventList>();
+    e->reserve(4);
+    e->emplace_back();
+    e->emplace_back(Event::Alarm_t::ADVISORY, "watch out");
+    e->emplace_back(Event::Alarm_t::CAUTION, "careful now");
+    e->emplace_back(Event::Alarm_t::WARNING, "oh bugger");
   };
 };
 
@@ -94,27 +96,36 @@ TEST_CASE_FIXTURE(PipeTests, "full push") {
 }
 
 TEST_CASE_FIXTURE(PipeTests, "push then pull") {
-  EventList local{};
+  CHECK(e->size() == 4);
+
+  auto local = std::make_unique<EventList>();
+  CHECK(local->size() == 0);
+
   p.push(e);
+  CHECK(e == nullptr);
+
   p.pull(local);
-  CHECK(e[0].type() == local[0].type());
-  //  CHECK(e == local);
-  //  CHECK(true = std::equal(begin(e), end(e), begin(local)));
+  CHECK(local->size() == 4);
+
+  CHECK((*local)[0].type() == Event::Alarm_t::NA);
+  CHECK((*local)[1].type() == Event::Alarm_t::ADVISORY);
+  CHECK((*local)[2].type() == Event::Alarm_t::CAUTION);
+  CHECK((*local)[3].type() == Event::Alarm_t::WARNING);
 }
 
-TEST_CASE_FIXTURE(PipeTests, "move-push then pull") {
-  CHECK(e.size() == 4);
-
-  EventList dlocal{};
-  p.push(std::move(e));
-  CHECK(e.size() == 0);
-
-  p.pull(dlocal);
-  CHECK(dlocal.size() == 4);
-
-  CHECK(dlocal[0].type() == Event::Alarm_t::NA);
-  //  CHECK(e == local);
-  //  CHECK(true = std::equal(begin(e), end(e), begin(local)));
-}
+//TEST_CASE_FIXTURE(PipeTests, "move-push then pull") {
+//  CHECK(e.size() == 4);
+//
+//  EventList dlocal{};
+//  p.push(std::move(e));
+//  CHECK(e.size() == 0);
+//
+//  p.pull(dlocal);
+//  CHECK(dlocal.size() == 4);
+//
+//  CHECK(dlocal[0].type() == Event::Alarm_t::NA);
+//  //  CHECK(e == local);
+//  //  CHECK(true = std::equal(begin(e), end(e), begin(local)));
+//}
 
 #endif

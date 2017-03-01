@@ -33,18 +33,18 @@ std::string Generator::execute()
 std::string Generator::execute(unsigned numOfMsgs)
 {
   string str{};
-  EventList evts {};
-  //evts.reserve(numOfMsgs);
+  auto evts = std::make_unique<EventList>();
+  evts->reserve(numOfMsgs);
 
   for( ; numOfMsgs > 0 ; --numOfMsgs) {
     unsigned val = rand() % 3;
-    evts.emplace_back(static_cast<Event::Alarm_t>(val), msg[val]);
+    evts->emplace_back(static_cast<Event::Alarm_t>(val), msg[val]);
   };
 
-  for(auto i : evts) {
+  for(auto i : *evts) {
      str += i.typeAsString();
   }
-  thePipe->push(std::move(evts));
+  thePipe->push(evts);
 
   return str;
 }
