@@ -26,11 +26,13 @@ std::string Display::execute() {
 
   auto err = thePipe->pull(evts);
   if (err == Pipe::err_t::OK) {
+#if DISPLAY
     for(auto i : *evts) {
        str += i.typeAsString();
        std::cout << "Event received => " << i.typeAsString();
        std::cout << " : " << i.what() << std::endl;
     }
+#endif
   }
   return str;
 }
