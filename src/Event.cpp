@@ -27,6 +27,9 @@ Event::Event(Alarm_t the_alarm, const char *name): theAlarm{the_alarm}
     str = new char[strlen(name)+1];
     strcpy(str,name);
   }
+  else {
+    str = nullptr;
+  }
 }
 
 Event::Event(const Event& cp): Event{cp.theAlarm, cp.str}
@@ -36,7 +39,7 @@ Event::Event(const Event& cp): Event{cp.theAlarm, cp.str}
 
 Event& Event::operator=(Event rhs)
 {
-  std::cout << "Event::opertor=(const Event rhs)\n";
+  std::cout << "Event::opertor=(Event rhs)\n";
   swap(*this, rhs);
   return *this;
 }
@@ -64,8 +67,14 @@ const char* Event::what () const
 
 void swap(Event& lhs, Event& rhs)
 {
-  std::swap(lhs.theAlarm, rhs.theAlarm);
-  std::swap(lhs.str, rhs.str);
+  using std::swap;
+ swap(lhs.theAlarm, rhs.theAlarm);
+ swap(lhs.str, rhs.str);
+}
+
+bool operator==(const Event& lhs, const Event& rhs)
+{
+  return ((lhs.theAlarm == rhs.theAlarm) && (lhs.str == rhs.str));
 }
 
 #ifdef EVENT_WITH_DOCTEST

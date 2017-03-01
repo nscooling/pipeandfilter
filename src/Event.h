@@ -25,14 +25,18 @@ public:
   Alarm_t type() const;
   const char* typeAsString() const;
   const char* what() const;
+
+
 private:
   Alarm_t theAlarm { Alarm_t::NA };
   char* str{ nullptr };
 
   friend void swap(Event& lhs, Event& rhs);
+  friend bool operator==(const Event& lhs, const Event& rhs);
 };
 
 void swap(Event& lhs, Event& rhs);
+bool operator==(const Event& lhs, const Event& rhs);
 
 using EventList = std::vector<Event>;
 

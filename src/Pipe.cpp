@@ -32,7 +32,7 @@ Pipe::err_t Pipe::pull(pipe_elem& e)
 }
 
 
-Pipe::err_t Pipe::push(const pipe_elem& e)
+Pipe::err_t Pipe::push(pipe_elem& e)
 {
   if(state != err_t::Full) {
     elem = e;
