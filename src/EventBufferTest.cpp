@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------------
-// Buffer.cpp
+// EventBufferTest.cpp
 //
 // DISCLAIMER:
 // Feabhas is furnishing this item "as is". Feabhas does not provide any
@@ -20,85 +20,107 @@
 // may be provided by Feabhas.
 // ----------------------------------------------------------------------------------
 
-#include "Buffer.h"
 
 
 
 //###################################################################################
-#ifdef BUFFER_WITH_DOCTEST
+#ifdef EVENTBUFFER_WITH_DOCTEST
 
+#include "Event.h"
+#include "Buffer.h"
+
+#include <vector>
 
 //#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 
-TEST_CASE("[int buffer] testing buffer") {
-  using testType = unsigned;
-  constexpr unsigned sz = 32;
-  constexpr unsigned halfSz = sz / 2;
+TEST_CASE("[event buffer] testing buffer") {
+  using testType = Event;
+  constexpr unsigned sz = 8;
   using theBuffer = Buffer<testType, sz>;
   theBuffer buffer;
   theBuffer::Error err;
+
+  std::vector<Event> evts {};
+  evts.reserve(4);
+  evts.emplace_back(Event::Alarm_t::NA, "N-A");
+  evts.emplace_back(Event::Alarm_t::ADVISORY, "Advisory");
+  evts.emplace_back(Event::Alarm_t::CAUTION, "Caution");
+  evts.emplace_back(Event::Alarm_t::WARNING, "Warning");
+
 
   // if a REQUIRE() fails - execution of the test stops.
   REQUIRE(buffer.isEmpty() == true); 
   REQUIRE(buffer.size() == size_t(0));
 
   SUBCASE("added element") {
-    err = buffer.add(10);
+    err = buffer.add(evts[0]);
     //  If a CHECK() fails - the test is marked as failed but the execution continues
     CHECK(buffer.isEmpty() == false);
     CHECK(buffer.size() == size_t(1));
     CHECK(err == theBuffer::OK);
   }
+
+  SUBCASE("added element") {
+    err = buffer.add(Event{Event::Alarm_t::NA, "N-A"});
+    //  If a CHECK() fails - the test is marked as failed but the execution continues
+    CHECK(buffer.isEmpty() == false);
+    CHECK(buffer.size() == size_t(1));
+    CHECK(err == theBuffer::OK);
+  }
+
   SUBCASE("test_initial_get") {
-    testType data;
+    testType data{};
     err = buffer.get(data);
 
     CHECK(err == theBuffer::EMPTY);
   }
 
   SUBCASE("test_initial_putget") {
-    err = buffer.add(1);
-    testType data;
+    err = buffer.add(Event{Event::Alarm_t::ADVISORY, "Advisory"});
+    testType data{};
     err = buffer.get(data);
 
     CHECK(err == theBuffer::OK);
     CHECK(true == buffer.isEmpty());
     CHECK(buffer.size() == size_t(0));
-    CHECK(1 == data);
+    CHECK(Event::Alarm_t::ADVISORY == data.type());
   }
 
   SUBCASE("test_initial_buffer_full") {
-    for (testType i = 0; i < sz; ++i) {
-      err = buffer.add(i);
+    static const std::array<const char*,4> msg{"noted", "careful", "danger","not applicable"};
+    for (unsigned i = 0; i < sz; ++i) {
+      err = buffer.add(Event{static_cast<Event::Alarm_t>(i%4), msg[i%4]});
       CHECK(err == theBuffer::OK);
     }
     CHECK(buffer.size() == size_t(sz));
-    err = buffer.add(1);
+    err = buffer.add(Event{Event::Alarm_t::ADVISORY, "Advisory"});
 
     CHECK(err == theBuffer::FULL);
   }
 
   SUBCASE("test_initial_buffer_full_to_empty") {
-    testType data;
+    static const std::array<const char*,4> msg{"noted", "careful", "danger","not applicable"};
+    constexpr unsigned halfSz = sz / 2;
+    testType data{};
 
-    for (testType i = 0; i < sz; ++i) {
-      err = buffer.add(i);
+    for (unsigned i = 0; i < sz; ++i) {
+      err = buffer.add(Event{static_cast<Event::Alarm_t>(i%4), msg[i%4]});
       CHECK(err == theBuffer::OK);
     }
-    for (testType i = 0; i < halfSz; ++i) {
+    for (unsigned i = 0; i < halfSz; ++i) {
       err = buffer.get(data);
       CHECK(err == theBuffer::OK);
-      CHECK(i == data);
+      CHECK(static_cast<Event::Alarm_t>(i%4) == data.type());
     }
-    for (testType i = 0; i < halfSz; ++i) {
-      err = buffer.add(i+sz);
+    for (unsigned i = 0; i < halfSz; ++i) {
+      err = buffer.add(Event{static_cast<Event::Alarm_t>((i+sz)%4), msg[(i+sz)%4]});
       CHECK(err == theBuffer::OK);
     }
-    for (testType i = 0; i < sz; ++i) {
+    for (unsigned i = 0; i < sz; ++i) {
       err = buffer.get(data);
       CHECK(err == theBuffer::OK);
-      CHECK((i+halfSz) == data);
+      CHECK(static_cast<Event::Alarm_t>((i+halfSz)%4) == data.type());
     }
 
     err = buffer.get(data);
@@ -106,7 +128,6 @@ TEST_CASE("[int buffer] testing buffer") {
   }
 }
 
-#include "Event.h"
 
 
 #endif

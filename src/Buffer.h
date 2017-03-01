@@ -21,27 +21,80 @@
 #include <cstddef>
 using std::size_t;
 
+#include <array>
+
+template <typename T, unsigned sz = 16>
 class Buffer
 {
 public:
-  typedef int Elem_Ty;
+  using Elem_Ty = T;
   enum Error : unsigned char {OK, FULL, EMPTY};
 
   Buffer();
 
   Error add(const Elem_Ty& value);
+  Error add(Elem_Ty&& value);
   Error get(Elem_Ty& value);
   bool isEmpty() const;
+  size_t size() { return numItems; }
 
 private:
   unsigned int read;
   unsigned int write;
   size_t       numItems;
 
-  static const size_t sz = 16;
-  Elem_Ty buffer[sz];
+//  static const size_t sz = 16;
+//  Elem_Ty buffer[sz];
+  std::array<Elem_Ty,sz> buffer{};
 };
 
+template <typename T, unsigned sz>
+Buffer<T, sz>::Buffer() : read(0), write(0), numItems(0) {}
+
+template <typename T, unsigned sz>
+typename Buffer<T, sz>::Error Buffer<T, sz>::add(const Buffer<T, sz>::Elem_Ty &value) {
+  if (numItems == sz)
+    return FULL;
+
+  buffer[write] = value;
+  ++numItems;
+  ++write;
+  if (write == sz)
+    write = 0;
+
+  return OK;
+}
+
+template <typename T, unsigned sz>
+typename Buffer<T, sz>::Error Buffer<T, sz>::add(Buffer<T, sz>::Elem_Ty &&value) {
+  if (numItems == sz)
+    return FULL;
+
+  buffer[write] = std::move(value);
+  ++numItems;
+  ++write;
+  if (write == sz)
+    write = 0;
+
+  return OK;
+}
+
+template <typename T, unsigned sz>
+typename Buffer<T, sz>::Error Buffer<T, sz>::get(Buffer<T, sz>::Elem_Ty &value) {
+  if (numItems == 0)
+    return EMPTY;
+
+  value = buffer[read];
+  --numItems;
+  ++read;
+  if (read == sz)
+    read = 0;
+
+  return OK;
+}
+
+template <typename T, unsigned sz>
+bool Buffer<T, sz>::isEmpty() const { return (numItems == 0); }
 
 
 #endif /* BUFFER_H_ */
