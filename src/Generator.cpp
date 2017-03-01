@@ -44,7 +44,7 @@ std::string Generator::execute(unsigned numOfMsgs)
   for(auto i : *evts) {
      str += i.typeAsString();
   }
- // thePipe->push(evts);
+  thePipe->push(std::move(evts));
 
   return str;
 }
