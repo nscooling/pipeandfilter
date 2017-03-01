@@ -21,7 +21,8 @@ public:
   Pipe();
   virtual ~Pipe();
   err_t pull(pipe_elem&);
-  err_t push(pipe_elem&);
+  err_t push(const pipe_elem&);
+  err_t push(pipe_elem&&);
 private:
   err_t state { err_t::Empty};
   pipe_elem elem{};

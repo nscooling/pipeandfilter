@@ -21,7 +21,7 @@ using namespace std;
 
 class GDTests {
 protected:
-  GDTests() = default; //:g{p}, d{p}, gf(&g), df(&d) {}
+  GDTests() :g{p}, d{p}, gf(&g), df(&d) {}
   Pipe p{};
   GeneratorAdpt g{ p };
   DisplayAdpt   d{ p };

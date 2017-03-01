@@ -28,7 +28,8 @@ std::string Display::execute() {
   if (err == Pipe::err_t::OK) {
     for(auto i : evts) {
        str += i.typeAsString();
-       std::cout << "Event received => " << i.typeAsString() << std::endl;
+       std::cout << "Event received => " << i.typeAsString();
+       std::cout << " : " << i.what() << std::endl;
     }
   }
   return str;

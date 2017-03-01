@@ -1,8 +1,18 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.12)
 
-project(executable)
+project(executable CXX)
 
-set(CMAKE_CXX_FLAGS "-std=c++14 -DTESTS -DEVENT_WITH_DOCTEST -DPIPE_WITH_DOCTEST -DPIPELINE_WITH_DOCTEST -DGDT_WITH_DOCTEST")
+#set(CMAKE_CXX_FLAGS " -std=c++14 -DTESTS ")
+add_compile_options(-std=c++14)
+add_compile_options(-DTESTS)
+add_compile_options(-DEVENT_WITH_DOCTEST)
+
+add_compile_options(-DPIPE_WITH_DOCTEST)
+add_compile_options(-DPIPELINE_WITH_DOCTEST)
+add_compile_options(-DIFILTER_WITH_DOCTEST)
+#add_compile_options(-DGDT_WITH_DOCTEST)
+
+
 include_directories(src)
 include_directories(doctest/doctest)
 AUX_SOURCE_DIRECTORY(src SOURCES)

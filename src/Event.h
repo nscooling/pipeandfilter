@@ -19,6 +19,7 @@ public:
   Event(Alarm_t the_alarm);
   Event(Alarm_t the_alarm,  const char*);
   Event(const Event&);
+  Event(Event&& rval) noexcept;
   Event& operator=(Event);
   ~Event();
 

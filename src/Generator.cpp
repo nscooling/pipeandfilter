@@ -13,6 +13,9 @@
 #include <array>
 using namespace std;
 
+static const std::array<const char*,4> msg{"noted", "careful", "danger","not applicable"};
+
+
 Generator::Generator(Pipe& p):thePipe(&p)
 {
 }
@@ -31,18 +34,17 @@ std::string Generator::execute(unsigned numOfMsgs)
 {
   string str{};
   EventList evts {};
-  evts.reserve(numOfMsgs);
+  //evts.reserve(numOfMsgs);
 
   for( ; numOfMsgs > 0 ; --numOfMsgs) {
     unsigned val = rand() % 3;
-    evts.emplace_back(static_cast<Event::Alarm_t>(val));
+    evts.emplace_back(static_cast<Event::Alarm_t>(val), msg[val]);
   };
 
-  auto err = thePipe->push(evts);
-  if(err == Pipe::err_t::OK) {
-    for(auto i : evts) {
-       str += i.typeAsString();
-    }
+  for(auto i : evts) {
+     str += i.typeAsString();
   }
+  thePipe->push(std::move(evts));
+
   return str;
 }

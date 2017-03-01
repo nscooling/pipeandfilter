@@ -22,7 +22,7 @@ Pipe::~Pipe()
 Pipe::err_t Pipe::pull(pipe_elem& e)
 {
   if(state != err_t::Empty) {
-    e = elem;
+    e = std::move(elem);
     state = err_t::Empty;
     return err_t::OK;
   }
@@ -32,10 +32,22 @@ Pipe::err_t Pipe::pull(pipe_elem& e)
 }
 
 
-Pipe::err_t Pipe::push(pipe_elem& e)
+Pipe::err_t Pipe::push(const pipe_elem& e)
 {
   if(state != err_t::Full) {
     elem = e;
+    state = err_t::Full;
+    return err_t::OK;
+  }
+  else {
+    return state;
+  }
+}
+
+Pipe::err_t Pipe::push(pipe_elem&& e)
+{
+  if(state != err_t::Full) {
+    elem = std::move(e);
     state = err_t::Full;
     return err_t::OK;
   }
@@ -52,11 +64,19 @@ Pipe::err_t Pipe::push(pipe_elem& e)
 class PipeTests {
 protected:
   Pipe p{};
-  EventList e{
-    Event{Event::Alarm_t::NA, ""},
-    Event{Event::Alarm_t::ADVISORY, "watch out"},
-    Event{Event::Alarm_t::CAUTION, "careful now"},
-    Event{Event::Alarm_t::WARNING, "oh bugger"}
+//  EventList e{
+//    Event{Event::Alarm_t::NA, ""},
+//    Event{Event::Alarm_t::ADVISORY, "watch out"},
+//    Event{Event::Alarm_t::CAUTION, "careful now"},
+//    Event{Event::Alarm_t::WARNING, "oh bugger"}
+//  };
+  EventList e{};
+  PipeTests() {
+    e.reserve(4);
+    e.emplace_back(Event::Alarm_t::NA, "");
+    e.emplace_back(Event::Alarm_t::ADVISORY, "watch out");
+    e.emplace_back(Event::Alarm_t::CAUTION, "careful now");
+    e.emplace_back(Event::Alarm_t::WARNING, "oh bugger");
   };
 };
 
@@ -77,8 +97,24 @@ TEST_CASE_FIXTURE(PipeTests, "push then pull") {
   EventList local{};
   p.push(e);
   p.pull(local);
-  CHECK(e[0] == local[0]);
-//  CHECK(true = std::equal(begin(e), end(e), begin(local)));
+  CHECK(e[0].type() == local[0].type());
+  //  CHECK(e == local);
+  //  CHECK(true = std::equal(begin(e), end(e), begin(local)));
+}
+
+TEST_CASE_FIXTURE(PipeTests, "move-push then pull") {
+  CHECK(e.size() == 4);
+
+  EventList dlocal{};
+  p.push(std::move(e));
+  CHECK(e.size() == 0);
+
+  p.pull(dlocal);
+  CHECK(dlocal.size() == 4);
+
+  CHECK(dlocal[0].type() == Event::Alarm_t::NA);
+  //  CHECK(e == local);
+  //  CHECK(true = std::equal(begin(e), end(e), begin(local)));
 }
 
 #endif

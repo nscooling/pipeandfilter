@@ -17,12 +17,16 @@ static const std::array<const char*,4> msg{"ADVISORY", "CAUTION", "WARNING","NA"
 
 Event::Event(Alarm_t the_alarm): theAlarm{the_alarm}
 {
+#if COUT
   std::cout << "Event::Event(Alarm_t the_alarm)\n";
+#endif
 }
 
 Event::Event(Alarm_t the_alarm, const char *name): theAlarm{the_alarm}
 {
+#if COUT
   std::cout << "Event::Event(Alarm_t the_alarm, const char *name)\n";
+#endif
   if(name != nullptr) {
     str = new char[strlen(name)+1];
     strcpy(str,name);
@@ -34,19 +38,34 @@ Event::Event(Alarm_t the_alarm, const char *name): theAlarm{the_alarm}
 
 Event::Event(const Event& cp): Event{cp.theAlarm, cp.str}
 {
+#if COUT
   std::cout << "Event::Event(const Event& cp)\n";
+#endif
+}
+
+Event::Event(Event&& rval) noexcept :
+    Event{}
+{
+#if COUT
+  std::cout << "Event::Event(Event&& cp)\n";
+#endif
+  swap(*this,rval);
 }
 
 Event& Event::operator=(Event rhs)
 {
+#if COUT
   std::cout << "Event::opertor=(Event rhs)\n";
+#endif
   swap(*this, rhs);
   return *this;
 }
 
 Event::~Event()
 {
+#if COUT
   std::cout << "Event::~Event()\n";
+#endif
   delete [] str;
 }
 
@@ -137,5 +156,15 @@ TEST_CASE_FIXTURE(EventTests, "op= test") {
   CHECK( std::string{a.what()} == std::string{"Advisory"});
 }
 
+TEST_CASE_FIXTURE(EventTests, "move test") {
+  Event copy(Event::Alarm_t::CAUTION, "Move Caution");
+  CHECK( copy.type() == Event::Alarm_t::CAUTION );
+  CHECK(a.type() == Event::Alarm_t::ADVISORY);
+
+  a = std::move(copy);
+
+  CHECK( copy.type() == Event::Alarm_t::NA );
+  CHECK( a.type() == Event::Alarm_t::CAUTION );
+}
 
 #endif
