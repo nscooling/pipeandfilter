@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.8.12)
 
 project(executable CXX)
+enable_testing()
+
 
 #set(CMAKE_CXX_FLAGS " -std=c++14 -DTESTS ")
 add_compile_options(-std=c++14)
@@ -24,3 +26,4 @@ AUX_SOURCE_DIRECTORY(src SOURCES)
 add_executable(executable ${SOURCES})
 target_link_libraries(executable pthread)
 
+add_test(testExecutable executable)
