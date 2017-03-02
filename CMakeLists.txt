@@ -6,6 +6,9 @@ enable_testing()
 
 #set(CMAKE_CXX_FLAGS " -std=c++14 -DTESTS ")
 add_compile_options(-std=c++14)
+
+add_compile_options(-DDISPLAY)
+
 add_compile_options(-DTESTS)
 add_compile_options(-DEVENT_WITH_DOCTEST)
 

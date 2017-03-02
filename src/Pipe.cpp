@@ -86,26 +86,26 @@ protected:
   };
 };
 
-TEST_CASE_FIXTURE(PipeTests, "empty pull") {
-  CHECK(Pipe::err_t::Empty == p.pull(e));
-}
+//TEST_CASE_FIXTURE(PipeTests, "empty pull") {
+//  CHECK(Pipe::err_t::Empty == p.pull(e));
+//}
 
 TEST_CASE_FIXTURE(PipeTests, "empty push lvalue") {
   CHECK(Pipe::err_t::OK == p.push(std::move(e)));
 }
 
-TEST_CASE_FIXTURE(PipeTests, "full push") {
-  auto events = {
-      Event{Event::Alarm_t::NA, ""},
-      Event{Event::Alarm_t::ADVISORY, "watch out"},
-      Event{Event::Alarm_t::CAUTION, "careful now"},
-      Event{Event::Alarm_t::WARNING, "oh bugger"}
-  };
-  p.push(std::make_unique<EventList>(events));
-  p.push(std::make_unique<EventList>(events));
-
-  CHECK(Pipe::err_t::Full == p.push(std::make_unique<EventList>(events)));
-}
+//TEST_CASE_FIXTURE(PipeTests, "full push") {
+//  auto events = {
+//      Event{Event::Alarm_t::NA, ""},
+//      Event{Event::Alarm_t::ADVISORY, "watch out"},
+//      Event{Event::Alarm_t::CAUTION, "careful now"},
+//      Event{Event::Alarm_t::WARNING, "oh bugger"}
+//  };
+//  p.push(std::make_unique<EventList>(events));
+//  p.push(std::make_unique<EventList>(events));
+//
+//  CHECK(Pipe::err_t::Full == p.push(std::make_unique<EventList>(events)));
+//}
 
 TEST_CASE_FIXTURE(PipeTests, "push then pull") {
   CHECK(e->size() == 4);

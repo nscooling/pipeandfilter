@@ -31,7 +31,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/doctest/doctest}&quot;"/>
 								</option>
 								<option id="gnu.cpp.compiler.option.preprocessor.def.1023292486" name="Defined symbols (-D)" superClass="gnu.cpp.compiler.option.preprocessor.def" useByScannerDiscovery="false" valueType="definedSymbols">
-									<listOptionValue builtIn="false" value="RUNFILTER_WITH_DOCTEST"/>
+									<listOptionValue builtIn="false" value="PIPE_WITH_DOCTEST"/>
 									<listOptionValue builtIn="false" value="DISPLAY"/>
 									<listOptionValue builtIn="false" value="TESTS"/>
 								</option>
