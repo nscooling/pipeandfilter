@@ -52,4 +52,16 @@ TEST_CASE_FIXTURE(PipelineTests, "initial test") {
   pipeline.run();
 }
 
+TEST_CASE_FIXTURE(PipelineTests, "change filter type test") {
+  IDFilter* filter = dynamic_cast<IDFilter*>(wf);
+  if(filter != nullptr) {
+    filter->setFilterType(Event::Alarm_t::CAUTION);
+  }
+  pipeline.add(*gf);
+  pipeline.add(*wf);
+  pipeline.add(*df);
+  pipeline.run();
+}
+
+
 #endif

@@ -26,6 +26,11 @@ IDFilter::~IDFilter()
   // TODO Auto-generated destructor stub
 }
 
+Event::Alarm_t IDFilter::setFilterType(Event::Alarm_t new_filter_type)
+{
+  std::swap(filter_t, new_filter_type);
+  return new_filter_type;
+}
 std::string IDFilter::execute()
 {
     auto evts = std::make_unique<EventList>();
@@ -35,7 +40,7 @@ std::string IDFilter::execute()
 
     // Apply filter here
 
-    auto it = std::remove_if(begin(*evts), end(*evts), [](Event& e){ return e.type() != Event::Alarm_t::WARNING;} );
+    auto it = std::remove_if(begin(*evts), end(*evts), [this](Event& e){ return e.type() != filter_t;} );
     (*evts).erase(it, end(*evts));
     //
 

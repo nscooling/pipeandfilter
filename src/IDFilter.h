@@ -10,6 +10,7 @@
 #define IDFILTER_H_
 
 #include "IFilter.h"
+#include "Event.h"
 
 class Pipe;
 
@@ -19,9 +20,11 @@ public:
   IDFilter(Pipe& ip, Pipe& op);
   virtual ~IDFilter();
   std::string execute() override;
+  Event::Alarm_t setFilterType(Event::Alarm_t);
 private:
   Pipe* source;
   Pipe* sink;
+  Event::Alarm_t filter_t {Event::Alarm_t::WARNING};
 };
 
 
