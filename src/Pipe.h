@@ -11,6 +11,9 @@
 
 #include "Event.h"
 #include <memory>
+#include <mutex>
+#include <condition_variable>
+
 #include "Buffer.h"
 using pipe_elem = std::unique_ptr<EventList>;
 
@@ -27,6 +30,9 @@ public:
 private:
   err_t state { err_t::Empty};
   Buffer<pipe_elem,2> elem{};
+  std::mutex mtx;
+  std::condition_variable hasData;
+  std::condition_variable hasSpace;
 };
 
 #endif /* SRC_PIPE_H_ */

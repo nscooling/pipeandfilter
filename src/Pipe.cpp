@@ -21,40 +21,43 @@ Pipe::~Pipe()
 
 Pipe::err_t Pipe::pull(pipe_elem& e)
 {
-  if(!elem.isEmpty()) {
-    elem.get(e);
-    if(elem.isEmpty())state = err_t::Empty;
-    return err_t::OK;
+  std::unique_lock<std::mutex> guard(mtx);
+
+  while(elem.isEmpty()) {
+    hasData.wait(guard);
   }
-  else {
-    return state;
-  }
+  elem.get(e);
+  if(elem.isEmpty())state = err_t::Empty;
+  hasSpace.notify_all();
+  return err_t::OK;
 }
 
-//
-//Pipe::err_t Pipe::push(const pipe_elem& e)
-//{
-//  if(!elem.isFull()) {
-////    elem = std::move(e);
-//    elem.add(e);
-//    if(elem.isFull())state = err_t::Full;
-//    return err_t::OK;
-//  }
-//  else {
-//    return state;
-//  }
-//}
-
-Pipe::err_t Pipe::push(pipe_elem&& e)
+#if 0
+Pipe::err_t Pipe::push(const pipe_elem& e)
 {
   if(!elem.isFull()) {
-    elem.add(std::move(e));
+//    elem = std::move(e);
+    elem.add(e);
     if(elem.isFull())state = err_t::Full;
     return err_t::OK;
   }
   else {
     return state;
   }
+}
+#endif
+
+Pipe::err_t Pipe::push(pipe_elem&& e)
+{
+  std::unique_lock<std::mutex> guard(mtx);
+
+  while(elem.isFull()) {
+    hasSpace.wait(guard);
+  }
+  elem.add(std::move(e));
+  if(elem.isFull())state = err_t::Full;
+  hasData.notify_all();
+  return err_t::OK;
 }
 
 
