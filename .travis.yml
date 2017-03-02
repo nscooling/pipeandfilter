@@ -6,6 +6,9 @@ compiler:
 
 before_install:
   - sudo apt-get update -q
+  - sudo add-apt-repository ppa:kalakris/cmake
+  - sudo apt-get update -qq
+  - sudo apt-get install cmake
 
 
 install:
