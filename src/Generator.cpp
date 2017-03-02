@@ -27,7 +27,8 @@ Generator::~Generator()
 
 std::string Generator::execute()
 {
-  return execute(rand() % 20);
+  return execute(20);
+//  return execute(rand() % 20);
 }
 
 std::string Generator::execute(unsigned numOfMsgs)

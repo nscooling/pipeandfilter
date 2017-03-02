@@ -27,20 +27,28 @@ void Pipeline::run()
 #include "Pipe.h"
 #include "Generator.h"
 #include "Display.h"
+#include "IDFilter.h"
 
 class PipelineTests {
 protected:
-  PipelineTests() = default;
-  Pipe p{};
-  GeneratorAdpt g{ p };
-  DisplayAdpt   d{ p };
-  Pipeline pipeline{};
+  PipelineTests()
+    {}
+  Pipe g2f{};
+  Pipe f2d{};
+  IDFilter id_filter { g2f, f2d };
+  GeneratorAdpt ga{ g2f };
+  DisplayAdpt   da{ f2d };
+  I_Filter*     gf{ &ga };
+  I_Filter*     wf{ &id_filter };
+  I_Filter*     df{ &da };
+  Pipeline      pipeline{};
 };
 
 
 TEST_CASE_FIXTURE(PipelineTests, "initial test") {
-  pipeline.add(g);
-  pipeline.add(d);
+  pipeline.add(*gf);
+  pipeline.add(*wf);
+  pipeline.add(*df);
   pipeline.run();
 }
 
