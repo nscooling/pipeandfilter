@@ -23,9 +23,10 @@ Pipe::err_t Pipe::pull(pipe_elem& e)
 {
   std::unique_lock<std::mutex> guard(mtx);
 
-  while(elem.isEmpty()) {
-    hasData.wait(guard);
-  }
+//  while(elem.isEmpty()) {
+//    hasData.wait(guard);
+//  }
+  hasData.wait(guard, [this]{ return !elem.isEmpty(); });
   elem.get(e);
   if(elem.isEmpty())state = err_t::Empty;
   hasSpace.notify_all();
@@ -51,9 +52,12 @@ Pipe::err_t Pipe::push(pipe_elem&& e)
 {
   std::unique_lock<std::mutex> guard(mtx);
 
-  while(elem.isFull()) {
-    hasSpace.wait(guard);
-  }
+  hasSpace.wait(guard, [this]{ return !elem.isFull(); });
+
+//  while(elem.isFull()) {
+//    hasSpace.wait(guard);
+//  }
+
   elem.add(std::move(e));
   if(elem.isFull())state = err_t::Full;
   hasData.notify_all();
