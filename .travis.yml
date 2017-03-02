@@ -5,13 +5,14 @@ compiler:
     - gcc
 
 before_install:
+  - sudo add-apt-repository ppa:george-edison55/cmake-3.x --yes
   - sudo apt-get update -q
-  - sudo add-apt-repository ppa:kalakris/cmake
   - sudo apt-get update -qq
   - sudo apt-get install cmake
 
 
 install:
+- sudo apt-get install cmake
 - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
 - if [ "$CXX" = "clang++" ] && [ "$TRAVIS_OS_NAME" = "linux" ]; then export CXX="clang++" CC="clang"; fi
 - echo ${PATH}
