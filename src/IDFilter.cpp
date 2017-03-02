@@ -37,6 +37,7 @@ std::string IDFilter::execute()
     std::string str{};
 
     auto err = source->pull(evts);
+    if (err == Pipe::err_t::OK) {
 
     // Apply filter here
 
@@ -44,7 +45,6 @@ std::string IDFilter::execute()
     (*evts).erase(it, end(*evts));
     //
 
-    if (err == Pipe::err_t::OK) {
       for(auto i : *evts) {
          str += i.typeAsString();
   #if DISPLAY
@@ -52,10 +52,8 @@ std::string IDFilter::execute()
          std::cout << " : " << i.what() << std::endl;
   #endif
       }
-
+      sink->push(std::move(evts));
     }
-
-    sink->push(std::move(evts));
     return str;
 }
 
