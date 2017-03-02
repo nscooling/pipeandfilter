@@ -15,7 +15,7 @@ add_compile_options(-DIFILTER_WITH_DOCTEST)
 add_compile_options(-DBUFFER_WITH_DOCTEST)
 add_compile_options(-DEVENTBUFFER_WITH_DOCTEST)
 add_compile_options(-DIDFILTER_WITH_DOCTEST)
-
+add_compile_options(-DRUNFILTER_WITH_DOCTEST)
 
 include_directories(src)
 include_directories(doctest/doctest)

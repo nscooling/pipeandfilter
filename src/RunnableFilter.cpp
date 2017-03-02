@@ -29,7 +29,7 @@ void RunnableFilter::run()
   do {
     str = theFilter->execute();
     if( str == std::string{}) {
-      this_thread::sleep_for(chrono::milliseconds{200});
+      this_thread::sleep_for(chrono::milliseconds{10});
     }
   }while(str != std::string("NA"));
 }
@@ -78,7 +78,6 @@ TEST_CASE_FIXTURE(RunnableFiltersTests, "initial test") {
       Event{Event::Alarm_t::NA, ""},
   };
   g2f.push(std::make_unique<EventList>(events));
-
 
   t1.join();
   t2.join();
