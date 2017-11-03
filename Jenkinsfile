@@ -1,13 +1,13 @@
 pipeline {
-  agent {
-    docker {
-      image 'gcc7'
-    }
-    
-  }
+  agent none
   stages {
     stage('step2') {
-      agent { docker { image 'gcc7' } }
+      agent {
+        docker {
+          image 'gcc7'
+        }
+        
+      }
       steps {
         isUnix()
         sh 'pwd'
