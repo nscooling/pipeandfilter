@@ -1,7 +1,7 @@
 pipeline {
   agent {
-    docker {
-      image 'ubuntu'
+    node {
+      label 'builder'
     }
     
   }
@@ -13,7 +13,7 @@ pipeline {
     }
     stage('step2') {
       steps {
-        node(label: 'node') {
+        node(label: 'builder') {
           isUnix()
         }
         
