@@ -1,22 +1,9 @@
 pipeline {
-  agent {
-    docker {
-      image 'rikorose/gcc-cmake'
-    }
-    
-  }
+  agent none
   stages {
     stage('build') {
       steps {
         echo 'simple pipeline'
-      }
-    }
-    stage('chdir') {
-      steps {
-        dir(path: 'build') {
-          sh 'printenv'
-        }
-        
       }
     }
   }
