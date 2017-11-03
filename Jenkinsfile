@@ -9,6 +9,10 @@ pipeline {
     stage('step2') {
       steps {
         isUnix()
+        node(label: 'node') {
+          isUnix()
+        }
+        
       }
     }
   }
