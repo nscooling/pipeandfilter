@@ -8,9 +8,7 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh '''mkdir build
-cd build
-cmake ..'''
+        sh 'mkdir build'
       }
     }
   }
