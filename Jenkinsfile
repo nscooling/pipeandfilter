@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'docker pull rikorose/gcc-cmake'
-    }
-    
-  }
+  agent none
   stages {
     stage('build') {
       steps {
@@ -13,10 +8,7 @@ pipeline {
     }
     stage('step2') {
       steps {
-        node(label: 'create node') {
-          sh 'build.sh'
-        }
-        
+        sh 'build.sh'
       }
     }
   }
