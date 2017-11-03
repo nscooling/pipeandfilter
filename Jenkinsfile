@@ -5,6 +5,7 @@ pipeline {
       steps {
         isUnix()
         sh 'pwd'
+        sh 'ls'
       }
     }
   }
