@@ -13,7 +13,10 @@ pipeline {
     }
     stage('step2') {
       steps {
-        sh 'build.sh'
+        node(label: 'create node') {
+          sh 'build.sh'
+        }
+        
       }
     }
   }
