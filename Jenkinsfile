@@ -8,7 +8,7 @@ pipeline {
     }
     stage('step2') {
       steps {
-        sh 'build.sh'
+        isUnix()
       }
     }
   }
