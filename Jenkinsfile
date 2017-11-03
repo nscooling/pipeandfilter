@@ -6,7 +6,7 @@ pipeline {
         isUnix()
         sh 'pwd'
         sh 'ls'
-        sh 'build.sh'
+        sh './build.sh'
         sh 'ls'
       }
     }
