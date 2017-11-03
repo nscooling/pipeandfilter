@@ -7,7 +7,7 @@ pipeline {
         sh 'pwd'
         sh 'ls'
         sh './build.sh'
-        sh 'ls'
+        sh 'ls build'
       }
     }
   }
