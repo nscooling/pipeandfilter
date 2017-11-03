@@ -6,5 +6,10 @@ pipeline {
         echo 'simple pipeline'
       }
     }
+    stage('step2') {
+      steps {
+        dir(path: 'build')
+      }
+    }
   }
 }
