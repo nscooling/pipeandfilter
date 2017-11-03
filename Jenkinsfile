@@ -8,7 +8,7 @@ pipeline {
     }
     stage('step2') {
       steps {
-        dir(path: 'build')
+        sh 'build.sh'
       }
     }
   }
