@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    node {
-      label 'builder'
-    }
-    
-  }
+  agent any
   stages {
     stage('build') {
       steps {
@@ -13,10 +8,7 @@ pipeline {
     }
     stage('step2') {
       steps {
-        node(label: 'builder') {
-          isUnix()
-        }
-        
+        isUnix()
       }
     }
   }
