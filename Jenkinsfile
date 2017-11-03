@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'gcc7'
+    }
+    
+  }
   stages {
     stage('build') {
       steps {
