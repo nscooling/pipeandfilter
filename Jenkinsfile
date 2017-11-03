@@ -8,7 +8,8 @@ pipeline {
   stages {
     stage('build') {
       steps {
-        sh 'mkdir build'
+        echo 'simple pipeline'
+        dir(path: 'build')
       }
     }
   }
