@@ -9,7 +9,7 @@ pipeline {
     stage('step2') {
       steps {
         isUnix()
-        sh 'cmake .'
+        sh 'pwd'
       }
     }
   }
