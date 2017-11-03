@@ -1,9 +1,16 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'rikorose/gcc-cmake'
+    }
+    
+  }
   stages {
     stage('build') {
       steps {
-        echo 'minimal pipeline'
+        sh '''mkdir build
+cd build
+cmake ..'''
       }
     }
   }
