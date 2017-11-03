@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
   stages {
     stage('build') {
       steps {
@@ -8,7 +8,8 @@ pipeline {
     }
     stage('step2') {
       steps {
-        dir(path: 'build')
+        isUnix()
+        sh 'build.sh'
       }
     }
   }
