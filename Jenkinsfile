@@ -9,7 +9,14 @@ pipeline {
     stage('build') {
       steps {
         echo 'simple pipeline'
-        dir(path: 'build')
+      }
+    }
+    stage('chdir') {
+      steps {
+        dir(path: 'build') {
+          sh 'printenv'
+        }
+        
       }
     }
   }
